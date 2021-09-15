@@ -2,16 +2,7 @@ const asyncHandler = require('express-async-handler')
 const { create, update } = require('../models/requestModel.js')
 const Request = require('../models/requestModel.js')
 
-const taskAvailable = asyncHandler(async(req, res) => {
-  let request = await Request.findById(req.params.id)
 
-  if(request){
-    return request
-  }else{
-    res.status(404)
-    throw new Error('Task not found')
-  }
-})
 const getAllRequests = asyncHandler(async(req, res) => {
   const requests = await Request.find({})
   
