@@ -2,27 +2,36 @@ const asyncHandler = require('express-async-handler')
 const { create, update } = require('../models/requestModel.js')
 const Request = require('../models/requestModel.js')
 
+const taskAvailable = asyncHandler(async(req, res) => {
+  let request = await Request.findById(req.params.id)
+
+  if(request){
+    return request
+  }else{
+    res.status(404)
+    throw new Error('Task not found')
+  }
+})
 const getAllRequests = asyncHandler(async(req, res) => {
-    const requests = await Request.find({})
-    
-    if(requests){ 
-        res.json(requests)
-    }else{
-        res.status(404)
-        throw new Error('Requests not found')
-    }
+  const requests = await Request.find({})
+  
+  if(requests){ 
+      res.json(requests)
+  }else{
+      res.status(404)
+      throw new Error('Requests not found')
+  }
 })
 
 const getRequestById = asyncHandler(async (req, res) => {
-    let request = await Request.findById(req.params.id).populate('user', 'name email').populate('progressUser', 'name email')
-
-    if (request) {
-      res.json(request)
-    } else {
-      res.status(404)
-      throw new Error('task not found')
-    }
-  })
+  let request = await Request.findById(req.params.id).populate('user', 'name email').populate('progressUser', 'name email')
+  if (request) {
+    res.json(request)
+  } else {
+    res.status(404)
+    throw new Error('task not found')
+  }
+})
 
 const getAllUserRequests = asyncHandler(async(req, res) => {
   const requests = await Request.find({user: req.user._id})
@@ -100,7 +109,7 @@ const startTask = asyncHandler(async(req, res) => {
 
   if(request){
     request.progressUser = req.user._id
-    const updatedRequest = request.save()
+    await request.save()
     res.json(request)
   }else{
     throw new Error('Cannot find request')
@@ -115,7 +124,18 @@ const submitTask = asyncHandler(async(req, res) => {
   }
   if(request){
     request.progressCompleted = true
-    const updatedRequest = request.save()
+    await request.save()
+    res.json(request)
+  }else{
+    throw new Error('Cannot find request')
+  }
+})
+
+const completeTask = asyncHandler(async(req, res) => {
+  const request = await Request.findById(req.params.id)
+  if(request){
+    request.isCompleted = true
+    await request.save()
     res.json(request)
   }else{
     throw new Error('Cannot find request')
@@ -130,3 +150,4 @@ module.exports.updateRequest = updateRequest
 module.exports.deleteRequest = deleteRequest
 module.exports.startTask = startTask
 module.exports.submitTask = submitTask
+module.exports.completeTask = completeTask

@@ -37,9 +37,10 @@ router.post(
       const file = new File({
         title,
         description,
+        taskId,
         file_path: path,
         file_mimetype: mimetype,
-        taskId:taskId
+        
       });
       await file.save();
       res.send('file uploaded successfully.');
@@ -54,9 +55,10 @@ router.post(
   }
 );
 
-router.get('/getAllFiles', async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
-    const files = await File.find({});
+    const files = await File.find({taskId: req.params.id});
+    
     const sortedByCreationDate = files.sort(
       (a, b) => b.createdAt - a.createdAt
     );
