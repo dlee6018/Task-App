@@ -1,7 +1,7 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
-import { myTaskReducer, taskCreateReducer, taskDeleteReducer, taskDetailsReducer, taskListReducer, taskStartReducer, taskSubmitReducer, taskUpdateReducer, taskUploadReducer } from './reducers/taskReducers'
+import { myTaskReducer, taskCompleteReducer, taskCreateReducer, taskDeleteReducer, taskDetailsReducer, taskListReducer, taskStartReducer, taskSubmitReducer, taskUpdateReducer, taskUploadReducer } from './reducers/taskReducers'
 import { userListReducer, userLoginReducer, userRegisterReducer, userUpdateProfileReducer } from './reducers/userReducers'
 import { fileDeleteReducer } from './reducers/fileReducers'
 
@@ -18,6 +18,7 @@ const reducer = combineReducers({
     taskUpdate: taskUpdateReducer,
     taskStart: taskStartReducer,
     taskSubmit: taskSubmitReducer,
+    taskComplete: taskCompleteReducer,
     taskUpload: taskUploadReducer,
     fileDelete: fileDeleteReducer
 })

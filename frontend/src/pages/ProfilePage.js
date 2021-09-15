@@ -31,6 +31,7 @@ const ProfilePage = ({history}) => {
         
         {loading? (<Loader/>): (
             <>
+            <h1>MY TASKS:</h1>
             <Button onClick = {() => setTableMode(true)}>Table View </Button>  <Button onClick = {() => setTableMode(false)}>Image View </Button>
             {tableMode?  
         <Table striped bordered hover>    

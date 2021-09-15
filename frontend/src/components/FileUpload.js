@@ -74,7 +74,7 @@ const FileUpload = ({history, match}) => {
           const formData = new FormData();
           formData.append('file', file);
           formData.append('title', title);
-          formData.append('user', userInfo._id)
+          formData.append('taskId', task._id)
           formData.append('description', description);
 
           setErrorMsg('');

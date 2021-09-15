@@ -6,7 +6,7 @@ import { useSelector, useDispatch} from 'react-redux'
 import { Button } from 'react-bootstrap'
 import { deleteFile } from '../actions/fileActions'
 
-const FilesList = () => {
+const FilesList = ({match}) => {
     
 
     const dispatch = useDispatch()
@@ -31,8 +31,7 @@ const FilesList = () => {
     useEffect(() => {
         const getFilesList = async () => {
           try {
-            const { data } = await axios.get('/api/file/getAllFiles');
-            console.log(data)
+            const { data } = await axios.get(`/api/file/${taskDetails.task._id}`);
             setErrorMsg('');
             setFilesList(data);
           } catch (error) {
@@ -77,7 +76,7 @@ const FilesList = () => {
           </thead>
           <tbody>
             {filesList.length > 0 ? (
-              filesList.filter((file) => file.taskId === task._id).map(
+              filesList.map(
                 ({ _id, title, description, file_path, file_mimetype }) => (
                   <tr key={_id}>
                     <td className="file-title">{title}</td>

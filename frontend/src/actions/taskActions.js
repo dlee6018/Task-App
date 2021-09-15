@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { TASK_LIST_REQUEST, TASK_LIST_SUCCESS, TASK_LIST_FAIL, TASK_DETAILS_REQUEST, TASK_DETAILS_SUCCESS, TASK_DETAILS_FAIL, TASK_MY_FAIL, TASK_MY_REQUEST, TASK_MY_SUCCESS, TASK_DELETE_REQUEST, TASK_DELETE_SUCCESS, TASK_DELETE_FAIL, TASK_CREATE_REQUEST, TASK_CREATE_SUCCESS, TASK_CREATE_FAIL, TASK_UPDATE_REQUEST, TASK_UPDATE_SUCCESS, TASK_UPDATE_FAIL, TASK_START_SUCCESS, TASK_START_REQUEST, TASK_START_FAIL, TASK_SUBMIT_REQUEST, TASK_SUBMIT_FAIL, TASK_SUBMIT_SUCCESS } from '../constants/taskConstants'
+import { TASK_LIST_REQUEST, TASK_LIST_SUCCESS, TASK_LIST_FAIL, TASK_DETAILS_REQUEST, TASK_DETAILS_SUCCESS, TASK_DETAILS_FAIL, TASK_MY_FAIL, TASK_MY_REQUEST, TASK_MY_SUCCESS, TASK_DELETE_REQUEST, TASK_DELETE_SUCCESS, TASK_DELETE_FAIL, TASK_CREATE_REQUEST, TASK_CREATE_SUCCESS, TASK_CREATE_FAIL, TASK_UPDATE_REQUEST, TASK_UPDATE_SUCCESS, TASK_UPDATE_FAIL, TASK_START_SUCCESS, TASK_START_REQUEST, TASK_START_FAIL, TASK_SUBMIT_REQUEST, TASK_SUBMIT_FAIL, TASK_SUBMIT_SUCCESS, TASK_COMPLETE_REQUEST, TASK_COMPLETE_SUCCESS, TASK_COMPLETE_FAIL } from '../constants/taskConstants'
 import {logout} from '../actions/userActions'
 
 export const listAllTasks = () => async(dispatch) => {
@@ -267,6 +267,45 @@ export const startTask = (id) => async(dispatch, getState) => {
     }
     dispatch({
       type: TASK_START_FAIL,
+      payload: message,
+    })
+  }
+}
+export const completeTask = (id) => async(dispatch, getState) => {
+  try {
+    dispatch({
+      type: TASK_COMPLETE_REQUEST,
+    })
+
+    const {
+      userLogin: { userInfo },
+    } = getState()
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    }
+
+    const { data } = await axios.put(
+      `/api/tasks/${id}/complete`,{},
+      config
+    )
+
+    dispatch({
+      type: TASK_COMPLETE_SUCCESS
+    })
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+    if (message === 'Not authorized, token failed') {
+      dispatch(logout())
+    }
+    dispatch({
+      type: TASK_COMPLETE_FAIL,
       payload: message,
     })
   }
