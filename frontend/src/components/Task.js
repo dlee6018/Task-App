@@ -2,7 +2,7 @@ import React from 'react'
 import { Row, Col, Button, Image, Card} from 'react-bootstrap'
 import {Link} from 'react-router-dom'
 
-const Task = ({task}) => {
+const Task = ({task, profile}) => {
     return (
         <Card style={{ width: '18rem' }} className = "shadow-lg p-3 mb-5 bg-white rounded">
         <span style = {{textAlign: "center", fontStyle: "italic"}}>{task.category.toUpperCase()} ({task.timeLimit} hours left)</span> 
@@ -22,11 +22,23 @@ const Task = ({task}) => {
             <Card.Text>
             <p>{task.description}</p>
             </Card.Text>
+            <Row>
+                <Col>
                 <Link to = {`/task/${task._id}`}>
                     <Button variant = 'primary'>
                         Details
                     </Button>
                 </Link>
+                </Col>
+                <Col>
+                {profile && 
+                <Link to = {`/task/${task._id}/edit`}>
+                    <Button variant = 'secondary'>
+                        Edit
+                    </Button>
+                </Link>}
+                </Col>
+            </Row>
         </Card.Body>
         </Card>
     )

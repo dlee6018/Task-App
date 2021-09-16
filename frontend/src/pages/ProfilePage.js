@@ -11,7 +11,7 @@ const ProfilePage = ({history}) => {
 
     const dispatch = useDispatch()
 
-    const [tableMode, setTableMode] = useState(true)
+    const [tableMode, setTableMode] = useState(false)
     const myTasks = useSelector((state) => state.myTasks)
     const {loading, tasks, error} = myTasks
 
@@ -65,7 +65,7 @@ const ProfilePage = ({history}) => {
         <Row>
         {tasks.map((task) => (
         <Col>
-            <Task task = {task}/>
+            <Task task = {task} profile = {true}/>
         </Col>
         ))}
     </Row>

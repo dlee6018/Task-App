@@ -15,6 +15,16 @@ const getAllRequests = asyncHandler(async(req, res) => {
   }
 })
 
+const requestAvailable = asyncHandler(async(req,res) => {
+  let request = await Request.findById(req.params.id)
+  
+  if(request){
+    return request
+  }else{
+    res.status(404)
+    throw new Error('task not found')
+  }
+})
 const getRequestById = asyncHandler(async (req, res) => {
   let request = await Request.findById(req.params.id).populate('user', 'name email').populate('progressUser', 'name email')
   if (request) {
