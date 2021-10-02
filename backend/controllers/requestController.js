@@ -3,6 +3,15 @@ const { create, update } = require('../models/requestModel.js')
 const Request = require('../models/requestModel.js')
 
 
+const findRequestAvailableById = (id) => {
+  const request = Request.findById(id)
+  if(request){
+    return request
+  }else{
+    res.status(404)
+    throw new Error('Request not found"')
+  }
+}
 
 const getAllRequests = asyncHandler(async(req, res) => {
   const requests = await Request.find({})
@@ -12,17 +21,6 @@ const getAllRequests = asyncHandler(async(req, res) => {
   }else{
       res.status(404)
       throw new Error('Requests not found')
-  }
-})
-
-const requestAvailable = asyncHandler(async(req,res) => {
-  let request = await Request.findById(req.params.id)
-  
-  if(request){
-    return request
-  }else{
-    res.status(404)
-    throw new Error('task not found')
   }
 })
 const getRequestById = asyncHandler(async (req, res) => {
@@ -67,13 +65,12 @@ const updateRequest = asyncHandler(async(req, res) => {
     price, timeLimit, isCompleted, name, image, description, category
   } = req.body
 
-  const request = await Request.findById(req.params.id)
-
+  //const request = await Request.findById(req.params.id)
+  let request = await findRequestAvailableById(req.params.id)
 
   if(String(request.user._id) != String(req.user._id)){
     throw new Error('You do not have permission to update this task')
   }
-  if(request){
     request.name = name
     request.price = price
     request.timeLimit = timeLimit
@@ -84,64 +81,46 @@ const updateRequest = asyncHandler(async(req, res) => {
 
     const updatedRequest = await request.save()
     res.json(updatedRequest)
-  }else{
-    res.status(404)
-    throw new Error('Request not available')
-  }
 })
 
 const deleteRequest = asyncHandler(async(req, res) => {
-  const request = await Request.findById(req.params.id)
+  // const request = await Request.findById(req.params.id)
+
+  const request = await findRequestAvailableById(req.params.id)
 
   if(String(request.user._id) != String(req.user._id)){
     res.status(404)
     throw new Error('You do not have permission to delete this task')
   }
-  if(request){
-    await request.remove()
-    res.json({message: 'Task removed'})
-  }else{
-    res.status(404)
-    throw new Error('Task not found')
-  }
+
+  await request.remove()
+  res.json({message: 'Task removed'})
 })
 
 const startTask = asyncHandler(async(req, res) => {
-  const request = await Request.findById(req.params.id)
 
-  if(request){
+  let request = await findRequestAvailableById(req.params.id)
     request.progressUser = req.user._id
     await request.save()
     res.json(request)
-  }else{
-    throw new Error('Cannot find request')
-  }
 })
 
 const submitTask = asyncHandler(async(req, res) => {
-  const request = await Request.findById(req.params.id)
+  let request = await findRequestAvailableById(req.params.id)
 
   if(String(req.user._id) != String(request.progressUser._id)){
     throw new Error('You cannot submit for this person')
   }
-  if(request){
-    request.progressCompleted = true
-    await request.save()
-    res.json(request)
-  }else{
-    throw new Error('Cannot find request')
-  }
+  request.progressCompleted = true
+  await request.save()
+  res.json(request)
 })
 
 const completeTask = asyncHandler(async(req, res) => {
-  const request = await Request.findById(req.params.id)
-  if(request){
-    request.isCompleted = true
-    await request.save()
-    res.json(request)
-  }else{
-    throw new Error('Cannot find request')
-  }
+  let request = await findRequestAvailableById(req.params.id)
+  request.isCompleted = true
+  await request.save()
+  res.json(request)
 })
 
 module.exports.getAllRequests = getAllRequests
