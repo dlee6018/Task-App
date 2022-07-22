@@ -7,7 +7,6 @@ const userRoutes = require('./routes/userRoutes.js')
 const uploadRoutes = require('./routes/uploadRoutes.js')
 const fileRoutes = require('./routes/fileRoutes.js')
 const path = require('path')
-const { application } = require('express')
 
 dotenv.config()
 
@@ -18,8 +17,7 @@ const app = express()
 app.use(express.json())
 
 
-
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 5100
 
 app.use('/api/tasks', requestRoutes)
 app.use('/api/users', userRoutes)
