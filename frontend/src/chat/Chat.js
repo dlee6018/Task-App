@@ -4,8 +4,12 @@ import "./chat.scss";
 import { MessagesPanel } from "./MessagesPanel";
 import socketClient from "socket.io-client";
 import { useSelector } from "react-redux";
+const dotenv = require("dotenv");
 
-const SERVER = `${process.env.API_URL}/${process.env.PORT}`;
+dotenv.config();
+
+const SERVER = process.env.URL || "http://127.0.0.1:5100";
+
 export class Chat extends React.Component {
   state = {
     channels: null,
