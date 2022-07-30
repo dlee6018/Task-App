@@ -5,7 +5,7 @@ import { MessagesPanel } from "./MessagesPanel";
 import socketClient from "socket.io-client";
 import { useSelector } from "react-redux";
 
-const SERVER = "http://127.0.0.1:5100";
+const SERVER = `http://127.0.0.1:${process.env.PORT}`;
 export class Chat extends React.Component {
   state = {
     channels: null,
