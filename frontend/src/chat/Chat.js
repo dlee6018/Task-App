@@ -8,7 +8,7 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const SERVER = process.env.URL || "http://127.0.0.1:5100";
+const SERVER = process.env.URL;
 
 export class Chat extends React.Component {
   state = {
