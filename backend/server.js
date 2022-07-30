@@ -32,27 +32,6 @@ app.get("/api/config/paypal", (req, res) =>
   res.send(process.env.PAYPAL_CLIENT_ID)
 );
 
-if (process.env.NODE_ENV === "production") {
-  app.use(
-    express.static(path.join(__dirname.split("/backend")[0], "/frontend/build"))
-  );
-
-  app.get("*", (req, res) =>
-    res.sendFile(
-      path.resolve(
-        __dirname.split("/backend")[0],
-        "frontend",
-        "build",
-        "index.html"
-      )
-    )
-  );
-} else {
-  app.get("/", (req, res) => {
-    res.send("API is running....");
-  });
-}
-
 const server = app.listen(
   PORT,
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
@@ -129,3 +108,24 @@ app.get("/getChannels", (req, res) => {
     channels: STATIC_CHANNELS,
   });
 });
+
+if (process.env.NODE_ENV === "production") {
+  app.use(
+    express.static(path.join(__dirname.split("/backend")[0], "/frontend/build"))
+  );
+
+  app.get("*", (req, res) =>
+    res.sendFile(
+      path.resolve(
+        __dirname.split("/backend")[0],
+        "frontend",
+        "build",
+        "index.html"
+      )
+    )
+  );
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running....");
+  });
+}

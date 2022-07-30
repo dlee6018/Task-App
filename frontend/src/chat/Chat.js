@@ -5,7 +5,7 @@ import { MessagesPanel } from "./MessagesPanel";
 import socketClient from "socket.io-client";
 import { useSelector } from "react-redux";
 
-const SERVER = "http://127.0.0.1:8080";
+const SERVER = "http://127.0.0.1:5100";
 export class Chat extends React.Component {
   state = {
     channels: null,
@@ -51,7 +51,7 @@ export class Chat extends React.Component {
   };
 
   loadChannels = async () => {
-    fetch("http://localhost:8080/getChannels").then(async (response) => {
+    fetch("/getChannels").then(async (response) => {
       let data = await response.json();
       this.setState({ channels: data.channels });
     });
