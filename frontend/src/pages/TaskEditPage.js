@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import { Link } from 'react-router-dom'
-import { Form, Button, Dropdown } from 'react-bootstrap'
+import { Form, Button, Dropdown, Row, Col } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../components/Loader'
 import FormContainer from '../components/FormContainer'
@@ -8,6 +8,7 @@ import Message from '../components/Message'
 import { TASK_UPDATE_RESET, TASK_CREATE_RESET } from '../constants/taskConstants'
 import { listTaskDetails, updateTask } from '../actions/taskActions'
 import axios from 'axios'
+import { deleteTask } from '../actions/taskActions'
 const TaskEditPage = ({match,history}) => {
 
     const taskId = match.params.id
@@ -61,15 +62,13 @@ const TaskEditPage = ({match,history}) => {
       }
   }
 
+  const deleteHandler = (id) => {
+    dispatch(deleteTask(id))
+    history.push('/profile')
+  }
+
     useEffect(() => {
         if(successCreate){
-          setName('Sample name')
-          setPrice(0)
-          setImage('https://previews.123rf.com/images/aquir/aquir1311/aquir131100316/23569861-sample-grunge-red-round-stamp.jpg')
-          setCategory('homework')
-          setDescription('Sample description')
-          setIsCompleted(false)
-          setTimeLimit(24)
           dispatch({type: TASK_CREATE_RESET})
         }
         if(successUpdate){
@@ -90,11 +89,14 @@ const TaskEditPage = ({match,history}) => {
         }
     },[dispatch, history, successUpdate, taskId, task])
     return (
-        <>
-          <Link to = '/profile' className = 'btn btn-light my-3'>
+        <Row style = {{marginTop: "1rem"}}>
+          <Col>
+          <Link to = '/profile' className = 'btn btn-light my-3' >
               Go To Profile
-        </Link>  
-        <FormContainer>
+        </Link> 
+          </Col>
+          <Col md = {9}>
+          <FormContainer>
             <h1>Edit Task</h1>
             {loadingUpdate && <Loader/>}
             {errorUpdate && <Message variant = 'danger'>{errorUpdate}</Message>}
@@ -203,7 +205,13 @@ const TaskEditPage = ({match,history}) => {
                 )
             }
         </FormContainer>
-        </>
+          </Col>
+          <Col>
+          <Button onClick = {() => deleteHandler(task._id)}>
+            Delete Task
+          </Button>
+          </Col>
+        </Row>
     )
 }
 

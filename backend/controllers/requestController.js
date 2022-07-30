@@ -1,3 +1,4 @@
+const { request } = require('express')
 const asyncHandler = require('express-async-handler')
 const { create, update } = require('../models/requestModel.js')
 const Request = require('../models/requestModel.js')
@@ -6,6 +7,7 @@ const Request = require('../models/requestModel.js')
 const findRequestAvailableById = (id) => {
   const request = Request.findById(id)
   if(request){
+    console.log(request)
     return request
   }else{
     res.status(404)
@@ -14,7 +16,7 @@ const findRequestAvailableById = (id) => {
 }
 
 const getAllRequests = asyncHandler(async(req, res) => {
-  const requests = await Request.find({})
+  let requests = await Request.find({progressUser:null})
   
   if(requests){ 
       res.json(requests)
@@ -34,7 +36,8 @@ const getRequestById = asyncHandler(async (req, res) => {
 })
 
 const getAllUserRequests = asyncHandler(async(req, res) => {
-  const requests = await Request.find({user: req.user._id})
+
+  const requests = await Request.find({$or:[{user:req.user._id},{progressUser:req.user._id}]})
 
   if(requests){
     res.json(requests)
@@ -53,7 +56,7 @@ const createRequest = asyncHandler(async(req, res) => {
     isCompleted: false,
     description: 'Sample description',
     category: 'Sample category',
-    image: '/images/sample.jpg'
+    image: 'https://previews.123rf.com/images/aquir/aquir1311/aquir131100316/23569861-sample-grunge-red-round-stamp.jpg'
   })
 
   const createdRequest = await request.save()
@@ -123,6 +126,23 @@ const completeTask = asyncHandler(async(req, res) => {
   res.json(request)
 })
 
+const updateRequestToPaid = asyncHandler(async(req, res) => {
+  const request = await Request.findById(req.params.id)
+
+  request.isPaid = true
+  request.paidAt = Date.now()
+
+
+  // paymentResult:{
+  //   id: req.body.id,
+  //   status:req.body.status,
+  //   updateTime : req.body.updateTime,
+  //   emailAddress: req.body.payer.emailAddress
+  // }    
+  const updatedRequest = await request.save()
+  res.json(updatedRequest)
+})
+
 module.exports.getAllRequests = getAllRequests
 module.exports.getRequestById = getRequestById
 module.exports.getAllUserRequests = getAllUserRequests
@@ -132,3 +152,4 @@ module.exports.deleteRequest = deleteRequest
 module.exports.startTask = startTask
 module.exports.submitTask = submitTask
 module.exports.completeTask = completeTask
+module.exports.updateRequestToPaid = updateRequestToPaid

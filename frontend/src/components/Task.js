@@ -1,10 +1,16 @@
 import React from 'react'
 import { Row, Col, Button, Image, Card} from 'react-bootstrap'
 import {Link} from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 
-const Task = ({task, profile}) => {
+const Task = ({task, profile,edit}) => {
+
+    const history = useHistory()
+
+
     return (
-        <Card style={{ width: '18rem' }} className = "shadow-lg p-3 mb-5 bg-white rounded">
+        <Card style={{ width: '18rem'}} className = "shadow-lg p-3 mb-5 bg-white rounded">
         <span style = {{textAlign: "center", fontStyle: "italic"}}>{task.category.toUpperCase()} ({task.timeLimit} hours left)</span> 
         <Row className = 'd-flex justify-content-between'>
         <Col>
@@ -16,7 +22,7 @@ const Task = ({task, profile}) => {
         Reward: <span style = {{fontWeight: "bold"}}>${task.price}</span>
         </Col>
         </Row>
-        <Card.Img variant="top" src={task.image} />
+        <Card.Img variant="top" src={task.image}  style = {{maxHeight: '11rem'}}/>
         <Card.Body>
             <Card.Title>{task.name}</Card.Title>
             <Card.Text>
@@ -30,13 +36,18 @@ const Task = ({task, profile}) => {
                     </Button>
                 </Link>
                 </Col>
+                <Col></Col>
                 <Col>
-                {profile && 
+                {profile && edit &&
+                <>
                 <Link to = {`/task/${task._id}/edit`}>
-                    <Button variant = 'secondary'>
+                    <Button  variant = 'secondary'>
                         Edit
                     </Button>
-                </Link>}
+                </Link>
+            <Button onClick = {() => history.push(`/task/${task._id}/pay`)} variant = "success">Pay</Button>
+                </>
+                }
                 </Col>
             </Row>
         </Card.Body>

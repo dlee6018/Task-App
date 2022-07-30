@@ -47,8 +47,25 @@ const requestSchema = mongoose.Schema(
         type: Boolean,
         required: true,
         default: false
-      }
+      },
+      paymentMethod: {
+          type: String,
+      },
+        paymentResult: {
+          id: { type: String },
+          status: { type: String },
+          update_time: { type: String },
+          email_address: { type: String },
+        },
+        isPaid: {
+          type: Boolean,
+          default: false,
+        },
+        paidAt: {
+          type: Date,
+        },
     },
+
     {
       timestamps: true,
     }

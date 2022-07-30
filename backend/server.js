@@ -1,44 +1,59 @@
-const express = require('express')
-const dotenv = require('dotenv')
-const colors = require('colors')
-const connectDB = require('./config/db.js')
-const requestRoutes = require('./routes/requestRoutes.js')
-const userRoutes = require('./routes/userRoutes.js')
-const uploadRoutes = require('./routes/uploadRoutes.js')
-const fileRoutes = require('./routes/fileRoutes.js')
-const path = require('path')
+const express = require("express");
+const dotenv = require("dotenv");
+const colors = require("colors");
+const connectDB = require("./config/db.js");
+const requestRoutes = require("./routes/requestRoutes.js");
+const userRoutes = require("./routes/userRoutes.js");
+const uploadRoutes = require("./routes/uploadRoutes.js");
+const fileRoutes = require("./routes/fileRoutes.js");
+const path = require("path");
 
-dotenv.config()
+dotenv.config();
 
-connectDB()
+connectDB();
 
-const app = express()
+const app = express();
 
-app.use(express.json())
+app.use(express.json());
 
+const PORT = process.env.PORT || 5100;
 
-const PORT = process.env.PORT || 5100
+app.use("/api/tasks", requestRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/upload", uploadRoutes);
+app.use("/api/file", fileRoutes);
 
-app.use('/api/tasks', requestRoutes)
-app.use('/api/users', userRoutes)
-app.use('/api/upload', uploadRoutes)
-app.use('/api/file',fileRoutes);
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname.split("/backend")[0], "/uploads"))
+);
 
-app.use('/uploads', express.static(path.join(__dirname.split('/backend')[0], '/uploads')))
+app.get("/api/config/paypal", (req, res) =>
+  res.send(process.env.PAYPAL_CLIENT_ID)
+);
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname.split('/backend')[0], '/frontend/build')))
+if (process.env.NODE_ENV === "production") {
+  app.use(
+    express.static(path.join(__dirname.split("/backend")[0], "/frontend/build"))
+  );
 
-  app.get('*', (req, res) =>
-    res.sendFile(path.resolve(__dirname.split('/backend')[0], 'frontend', 'build', 'index.html'))
-  )
+  app.get("*", (req, res) =>
+    res.sendFile(
+      path.resolve(
+        __dirname.split("/backend")[0],
+        "frontend",
+        "build",
+        "index.html"
+      )
+    )
+  );
 } else {
-  app.get('/', (req, res) => {
-    res.send('API is running....')
-  })
+  app.get("/", (req, res) => {
+    res.send("API is running....");
+  });
 }
 
-app.listen(PORT, 
-    console.log(
-        `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`
-    ))
+app.listen(
+  PORT,
+  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
+);
