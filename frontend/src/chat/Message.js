@@ -1,6 +1,11 @@
-import React from "react";
+import * as React from "react";
 
-export const Message = ({ senderName, text }) => {
+type MessageProps = {
+  senderName: string,
+  text: string
+}
+
+export const Message = ({ senderName, text } : MessageProps) => {
   return (
     <div className="message-item">
       <div>

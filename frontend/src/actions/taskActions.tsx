@@ -2,6 +2,11 @@ import axios from 'axios'
 import { TASK_LIST_REQUEST, TASK_LIST_SUCCESS, TASK_LIST_FAIL, TASK_DETAILS_REQUEST, TASK_DETAILS_SUCCESS, TASK_DETAILS_FAIL, TASK_MY_FAIL, TASK_MY_REQUEST, TASK_MY_SUCCESS, TASK_DELETE_REQUEST, TASK_DELETE_SUCCESS, TASK_DELETE_FAIL, TASK_CREATE_REQUEST, TASK_CREATE_SUCCESS, TASK_CREATE_FAIL, TASK_UPDATE_REQUEST, TASK_UPDATE_SUCCESS, TASK_UPDATE_FAIL, TASK_START_SUCCESS, TASK_START_REQUEST, TASK_START_FAIL, TASK_SUBMIT_REQUEST, TASK_SUBMIT_FAIL, TASK_SUBMIT_SUCCESS, TASK_COMPLETE_REQUEST, TASK_COMPLETE_SUCCESS, TASK_COMPLETE_FAIL, TASK_PAY_REQUEST, TASK_PAY_SUCCESS, TASK_PAY_FAIL } from '../constants/taskConstants'
 import {logout} from '../actions/userActions'
 
+
+interface Error {
+  message: string,
+  [response:string]:string
+}
 export const listAllTasks = () => async(dispatch) => {
     try{
         dispatch({
@@ -15,7 +20,6 @@ export const listAllTasks = () => async(dispatch) => {
             payload: data
         })
     }catch(error){
-        console.log(error)
         dispatch({
             type: TASK_LIST_FAIL,
             payload:error
@@ -33,16 +37,18 @@ export const listTaskDetails = (id) => async (dispatch) => {
         type: TASK_DETAILS_SUCCESS,
         payload: data,
       })
-    } catch (error) {
-      dispatch({
-        type: TASK_DETAILS_FAIL,
-        payload:
-          error.response && error.response.data.message
-            ? error.response.data.message
-            : error.message,
-      })
+    } catch (error:any) {
+        dispatch({
+          type: TASK_DETAILS_FAIL,
+          payload:
+            error.response && error.response.data.message
+              ? error.response.data.message
+              : error.message,
+        })
+      }
+     
     }
-  }
+
 
 export const getAllTasksByUser = () => async(dispatch, getState) => {
   try{
@@ -65,7 +71,7 @@ export const getAllTasksByUser = () => async(dispatch, getState) => {
       type: TASK_MY_SUCCESS,
       payload:data
     })
-  }catch(error){
+  }catch(error:any){
     dispatch({
       type: TASK_MY_FAIL,
       payload:
@@ -97,7 +103,7 @@ export const deleteTask = (id) => async (dispatch, getState) => {
     dispatch({
       type: TASK_DELETE_SUCCESS,
     })
-  } catch (error) {
+  } catch (error:any) {
     const message =
       error.response && error.response.data.message
         ? error.response.data.message
@@ -134,7 +140,7 @@ export const createTask = () => async (dispatch, getState) => {
       type: TASK_CREATE_SUCCESS,
       payload: data,
     })
-  } catch (error) {
+  } catch (error:any) {
     const message =
       error.response && error.response.data.message
         ? error.response.data.message
@@ -177,7 +183,7 @@ export const updateTask = (task) => async (dispatch, getState) => {
       payload: data,
     })
     dispatch({ type: TASK_DETAILS_SUCCESS, payload: data })
-  } catch (error) {
+  } catch (error:any) {
     const message =
       error.response && error.response.data.message
         ? error.response.data.message
@@ -217,7 +223,7 @@ export const submitTask = (id) => async(dispatch, getState) => {
     dispatch({
       type: TASK_SUBMIT_SUCCESS
     })
-  } catch (error) {
+  } catch (error:any) {
     const message =
       error.response && error.response.data.message
         ? error.response.data.message
@@ -257,7 +263,7 @@ export const startTask = (id) => async(dispatch, getState) => {
     dispatch({
       type: TASK_START_SUCCESS
     })
-  } catch (error) {
+  } catch (error:any) {
     const message =
       error.response && error.response.data.message
         ? error.response.data.message
@@ -296,7 +302,7 @@ export const completeTask = (id) => async(dispatch, getState) => {
     dispatch({
       type: TASK_COMPLETE_SUCCESS
     })
-  } catch (error) {
+  } catch (error:any) {
     const message =
       error.response && error.response.data.message
         ? error.response.data.message
@@ -335,7 +341,7 @@ export const payTask = (id) => async(dispatch, getState) => {
     dispatch({
       type:TASK_PAY_SUCCESS
     })
-  } catch(error){
+  } catch(error:any){
     const message =
       error.response && error.response.data.message
         ? error.response.data.message

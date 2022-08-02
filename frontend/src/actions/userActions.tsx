@@ -51,7 +51,7 @@ export const login = (email, password) => async (dispatch) => {
     })
 
     localStorage.setItem('userInfo', JSON.stringify(data))
-  } catch (error) {
+  } catch (error:any) {
     dispatch({
       type: USER_LOGIN_FAIL,
       payload:
@@ -97,7 +97,7 @@ export const register = (name, email, password) => async (dispatch) => {
     })
 
     localStorage.setItem('userInfo', JSON.stringify(data))
-  } catch (error) {
+  } catch (error:any) {
     dispatch({
       type: USER_REGISTER_FAIL,
       payload:
@@ -136,7 +136,7 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
       payload: data,
     })
     localStorage.setItem('userInfo', JSON.stringify(data))
-  } catch (error) {
+  } catch (error:any) {
     const message =
       error.response && error.response.data.message
         ? error.response.data.message
@@ -173,7 +173,7 @@ export const listUsers = () => async(dispatch, getState) => {
       payload: data
     })
 
-  }catch(error){
+  }catch(error:any){
     const message = 
       error.response && error.response.data.message
       ? error.response.data.message

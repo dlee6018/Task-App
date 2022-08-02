@@ -37,8 +37,8 @@ const ProfilePage = ({ history }) => {
   };
 
   const showStartedTask = (tasks) => {
-    const filteredTasks = tasks.filter((task) => task.progressUser !== "")
-    return filteredTasks
+    const filteredTasks = tasks.filter((task) => task.progressUser !== "");
+    return filteredTasks;
   };
 
   const userLogin = useSelector((state) => state.userLogin);
@@ -51,7 +51,13 @@ const ProfilePage = ({ history }) => {
       ) : (
         <>
           <h1>MY TASKS:</h1>
-          <div style = {{display:"flex", justifyContent:"space-around", marginBottom:"1rem"}}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              marginBottom: "1rem",
+            }}
+          >
             <Button onClick={() => setTableMode(true)}>Table View </Button>
             <Button onClick={() => setTableMode(false)}>Image View </Button>
             {/* <Button onClick = {() => showStartedTask()}>Started Tasks</Button> */}
